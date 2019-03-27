@@ -10,6 +10,12 @@ require('./bootstrap');
 window.Vue = require('vue');
 const axios = require('axios');
 const base_url=window.location.origin+'/public';
+
+import Vue           from 'vue';
+import Notifications from 'vue-notification';
+Vue.use(Notifications);
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -23,6 +29,7 @@ const base_url=window.location.origin+'/public';
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('post-list',require('./components/PostListComponent.vue').default);
+Vue.component('create-post',require('./components/CreatePostsComponent.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

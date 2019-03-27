@@ -74,7 +74,10 @@
         </nav>
 
         <main class="py-4" id="app">
+
             @yield('content')
+
+            <notifications group="message" />
         </main>
     </div>
 </body>
