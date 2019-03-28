@@ -1763,6 +1763,12 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 //
 //
 //
@@ -1809,39 +1815,72 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+var Error =
+/*#__PURE__*/
+function () {
+  function Error() {
+    _classCallCheck(this, Error);
+
+    this.errors = {};
+  }
+
+  _createClass(Error, [{
+    key: "recoredError",
+    value: function recoredError(errors) {
+      this.errors = errors;
+    }
+  }, {
+    key: "has",
+    value: function has(filed) {
+      if (this.errors[filed]) {
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "get",
+    value: function get(filed) {
+      return this.errors[filed][0];
+    }
+  }, {
+    key: "removeError",
+    value: function removeError(filed) {
+      delete this.errors[filed];
+    }
+  }]);
+
+  return Error;
+}();
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       title: "",
-      desc: ""
+      desc: "",
+      errors: new Error()
     };
-  },
-  mounted: function mounted() {
-    console.log("Component mounted.");
   },
   methods: {
     save: function save() {
-      axios.post(window.location.origin + '/blog/public/' + 'api/posts', {
+      var _this = this;
+
+      axios.post(window.location.origin + "/blog/public/" + "api/posts", {
         title: this.title,
         desc: this.desc
       }).then(function (response) {
-        console.log(response); // if(response.data.code==201){
-        //     Vue.notify({
-        //         group: 'message',
-        //         type: 'warn',
-        //         title: 'successfuly add',
-        //         text: 'you are succefully add!'
-        //     })
-        // }else{
-        //      Vue.notify({
-        //         group: 'message',
-        //         type: 'warn',
-        //         title: 'successfuly add',
-        //         text: 'you are succefully add!'
-        //     })
-        // }
-      }).catch(function (response) {
-        console.log(response);
+        this.title = '';
+        this.desc = '';
+        Vue.notify({
+          group: 'message',
+          type: 'warn',
+          title: 'successfuly add',
+          text: 'you are succefully add!'
+        });
+      }).catch(function (error) {
+        _this.errors.recoredError(error.response.data.errors);
       });
     }
   }
@@ -36975,100 +37014,114 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c("form", [
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "title" } }, [_vm._v("title")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.title,
-                      expression: "title"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    id: "title",
-                    placeholder: "Enter title"
-                  },
-                  domProps: { value: _vm.title },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.title = $event.target.value
-                    }
+            _c(
+              "form",
+              {
+                on: {
+                  keydown: function($event) {
+                    return _vm.errors.removeError($event.target.name)
                   }
-                }),
+                }
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "title" } }, [_vm._v("title")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.title,
+                        expression: "title"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "title",
+                      placeholder: "Enter title"
+                    },
+                    domProps: { value: _vm.title },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.title = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.has("title")
+                    ? _c(
+                        "small",
+                        {
+                          staticClass: "form-text  text-danger",
+                          attrs: { id: "title" }
+                        },
+                        [_vm._v(_vm._s(_vm.errors.get("title")) + ".")]
+                      )
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "desc" } }, [_vm._v("desc")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.desc,
+                        expression: "desc"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "desc",
+                      placeholder: "Enter description"
+                    },
+                    domProps: { value: _vm.desc },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.desc = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.has("desc")
+                    ? _c(
+                        "small",
+                        {
+                          staticClass: "form-text  text-danger",
+                          attrs: { id: "desc" }
+                        },
+                        [_vm._v(_vm._s(_vm.errors.get("desc")))]
+                      )
+                    : _vm._e()
+                ]),
                 _vm._v(" "),
                 _c(
-                  "small",
+                  "button",
                   {
-                    staticClass: "form-text text-muted",
-                    attrs: { id: "title" }
-                  },
-                  [_vm._v("We'll never share your email with anyone else.")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "desc" } }, [_vm._v("desc")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.desc,
-                      expression: "desc"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    id: "desc",
-                    placeholder: "Enter description"
-                  },
-                  domProps: { value: _vm.desc },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.save($event)
                       }
-                      _vm.desc = $event.target.value
                     }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "small",
-                  {
-                    staticClass: "form-text text-muted",
-                    attrs: { id: "desc" }
                   },
-                  [_vm._v("We'll never share your email with anyone else.")]
+                  [_vm._v("Save")]
                 )
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { type: "submit" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.save($event)
-                    }
-                  }
-                },
-                [_vm._v("Save")]
-              )
-            ])
+              ]
+            )
           ])
         ])
       ])

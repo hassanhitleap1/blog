@@ -30,16 +30,10 @@ class PostController extends Controller
     public function store(Request $request)
     {
       
-        $validator=$request->validate([
+        $this->validate($request,[
             'title'=>'required',
             'desc'=>'required'
-        ]);
-        dd('ss');
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            return response()->json(['errors'=> $errors,'code'=>422]);
-        }
-       dd($validator->fails());
+        ]);     
         
         Post::create([
             'title'=>$request->title,
