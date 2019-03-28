@@ -59,10 +59,7 @@ class Error {
   }
 
   has(filed) {
-    if (this.errors[filed]) {
-      return true;
-    }
-    return false;
+    return this.errors.hasOwnProperty(filed);
   }
 
   get(filed) {

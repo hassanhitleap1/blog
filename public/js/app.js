@@ -1836,11 +1836,7 @@ function () {
   }, {
     key: "has",
     value: function has(filed) {
-      if (this.errors[filed]) {
-        return true;
-      }
-
-      return false;
+      return this.errors.hasOwnProperty(filed);
     }
   }, {
     key: "get",
