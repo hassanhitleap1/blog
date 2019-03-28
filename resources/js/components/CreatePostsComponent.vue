@@ -4,15 +4,16 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">Example Component</div>
-
-          <div class="card-body">
-            <form @keydown="errors.removeError($event.target.name)">
+<!-- @keydown="errors.removeError($event.target.name)" -->
+          <div class="card-body" @keydown="errors.removeError($event.target.name)">
+            <form >
               <div class="form-group">
                 <label for="title">title</label>
                 <input
                   type="text"
                   class="form-control"
                   id="title"
+                  name="title"
                   placeholder="Enter title"
                   v-model="title"
                 >
@@ -28,6 +29,7 @@
                   type="text"
                   class="form-control"
                   id="desc"
+                  name="desc"
                   placeholder="Enter description"
                   v-model="desc"
                 >
@@ -37,7 +39,7 @@
                   v-if="errors.has('desc')"
                 >{{errors.get('desc')}}</small>
               </div>
-              <button type="submit" @click.prevent="save" class="btn btn-primary">Save</button>
+              <button type="submit" :disabled="errors.anyError()" @click.prevent="save" class="btn btn-primary">Save</button>
             </form>
           </div>
         </div>
@@ -70,6 +72,14 @@ class Error {
   removeError(filed){
     delete this.errors[filed];
   }
+
+
+  anyError(){
+    if(Object.keys(this.errors).length) return true;
+    return false;
+  }
+
+
 }
 
 export default {

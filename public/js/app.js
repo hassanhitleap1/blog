@@ -1817,6 +1817,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 //
 //
 //
+//
+//
 var Error =
 /*#__PURE__*/
 function () {
@@ -1849,6 +1851,12 @@ function () {
     key: "removeError",
     value: function removeError(filed) {
       delete this.errors[filed];
+    }
+  }, {
+    key: "anyError",
+    value: function anyError() {
+      if (Object.keys(this.errors).length) return true;
+      return false;
     }
   }]);
 
@@ -37013,17 +37021,18 @@ var render = function() {
             _vm._v("Example Component")
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "form",
-              {
-                on: {
-                  keydown: function($event) {
-                    return _vm.errors.removeError($event.target.name)
-                  }
+          _c(
+            "div",
+            {
+              staticClass: "card-body",
+              on: {
+                keydown: function($event) {
+                  return _vm.errors.removeError($event.target.name)
                 }
-              },
-              [
+              }
+            },
+            [
+              _c("form", [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "title" } }, [_vm._v("title")]),
                   _vm._v(" "),
@@ -37040,6 +37049,7 @@ var render = function() {
                     attrs: {
                       type: "text",
                       id: "title",
+                      name: "title",
                       placeholder: "Enter title"
                     },
                     domProps: { value: _vm.title },
@@ -37081,6 +37091,7 @@ var render = function() {
                     attrs: {
                       type: "text",
                       id: "desc",
+                      name: "desc",
                       placeholder: "Enter description"
                     },
                     domProps: { value: _vm.desc },
@@ -37110,7 +37121,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-primary",
-                    attrs: { type: "submit" },
+                    attrs: { type: "submit", disabled: _vm.errors.anyError() },
                     on: {
                       click: function($event) {
                         $event.preventDefault()
@@ -37120,9 +37131,9 @@ var render = function() {
                   },
                   [_vm._v("Save")]
                 )
-              ]
-            )
-          ])
+              ])
+            ]
+          )
         ])
       ])
     ])
