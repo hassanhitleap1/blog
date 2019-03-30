@@ -1818,7 +1818,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 //
 //
 //
-//
 var Error =
 /*#__PURE__*/
 function () {
@@ -1859,12 +1858,25 @@ function () {
   return Error;
 }();
 
+var Form = function Form(data) {
+  _classCallCheck(this, Form);
+
+  this.data = data;
+
+  for (var key in data) {
+    this[key] = data[key];
+  }
+
+  this.errors = new Error();
+};
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: "",
-      desc: "",
-      errors: new Error()
+      form: new Form({
+        title: "",
+        desc: ""
+      })
     };
   },
   methods: {
@@ -1875,8 +1887,8 @@ function () {
         title: this.title,
         desc: this.desc
       }).then(function (response) {
-        this.title = '';
-        this.desc = '';
+        this.form.title = '';
+        this.form.desc = '';
         Vue.notify({
           group: 'message',
           type: 'warn',
@@ -1884,7 +1896,7 @@ function () {
           text: 'you are succefully add!'
         });
       }).catch(function (error) {
-        _this.errors.recoredError(error.response.data.errors);
+        _this.form.errors.recoredError(error.response.data.errors);
       });
     }
   }
@@ -37023,7 +37035,7 @@ var render = function() {
               staticClass: "card-body",
               on: {
                 keydown: function($event) {
-                  return _vm.errors.removeError($event.target.name)
+                  return _vm.form.errors.removeError($event.target.name)
                 }
               }
             },
@@ -37037,8 +37049,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.title,
-                        expression: "title"
+                        value: _vm.form.title,
+                        expression: "form.title"
                       }
                     ],
                     staticClass: "form-control",
@@ -37048,25 +37060,25 @@ var render = function() {
                       name: "title",
                       placeholder: "Enter title"
                     },
-                    domProps: { value: _vm.title },
+                    domProps: { value: _vm.form.title },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.title = $event.target.value
+                        _vm.$set(_vm.form, "title", $event.target.value)
                       }
                     }
                   }),
                   _vm._v(" "),
-                  _vm.errors.has("title")
+                  _vm.form.errors.has("title")
                     ? _c(
                         "small",
                         {
                           staticClass: "form-text  text-danger",
                           attrs: { id: "title" }
                         },
-                        [_vm._v(_vm._s(_vm.errors.get("title")) + ".")]
+                        [_vm._v(_vm._s(_vm.form.errors.get("title")) + ".")]
                       )
                     : _vm._e()
                 ]),
@@ -37079,8 +37091,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.desc,
-                        expression: "desc"
+                        value: _vm.form.desc,
+                        expression: "form.desc"
                       }
                     ],
                     staticClass: "form-control",
@@ -37090,25 +37102,25 @@ var render = function() {
                       name: "desc",
                       placeholder: "Enter description"
                     },
-                    domProps: { value: _vm.desc },
+                    domProps: { value: _vm.form.desc },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.desc = $event.target.value
+                        _vm.$set(_vm.form, "desc", $event.target.value)
                       }
                     }
                   }),
                   _vm._v(" "),
-                  _vm.errors.has("desc")
+                  _vm.form.errors.has("desc")
                     ? _c(
                         "small",
                         {
                           staticClass: "form-text  text-danger",
                           attrs: { id: "desc" }
                         },
-                        [_vm._v(_vm._s(_vm.errors.get("desc")))]
+                        [_vm._v(_vm._s(_vm.form.errors.get("desc")))]
                       )
                     : _vm._e()
                 ]),
@@ -37117,7 +37129,10 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-primary",
-                    attrs: { type: "submit", disabled: _vm.errors.anyError() },
+                    attrs: {
+                      type: "submit",
+                      disabled: _vm.form.errors.anyError()
+                    },
                     on: {
                       click: function($event) {
                         $event.preventDefault()

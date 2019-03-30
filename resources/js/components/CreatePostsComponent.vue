@@ -4,8 +4,7 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">Example Component</div>
-<!-- @keydown="errors.removeError($event.target.name)" -->
-          <div class="card-body" @keydown="errors.removeError($event.target.name)">
+          <div class="card-body" @keydown="form.errors.removeError($event.target.name)">
             <form >
               <div class="form-group">
                 <label for="title">title</label>
@@ -15,13 +14,13 @@
                   id="title"
                   name="title"
                   placeholder="Enter title"
-                  v-model="title"
+                  v-model="form.title"
                 >
                 <small
                   id="title"
                   class="form-text  text-danger"
-                  v-if="errors.has('title')"
-                >{{errors.get('title')}}.</small>
+                  v-if="form.errors.has('title')"
+                >{{form.errors.get('title')}}.</small>
               </div>
               <div class="form-group">
                 <label for="desc">desc</label>
@@ -31,15 +30,15 @@
                   id="desc"
                   name="desc"
                   placeholder="Enter description"
-                  v-model="desc"
+                  v-model="form.desc"
                 >
                 <small
                   id="desc"
                   class="form-text  text-danger"
-                  v-if="errors.has('desc')"
-                >{{errors.get('desc')}}</small>
+                  v-if="form.errors.has('desc')"
+                >{{form.errors.get('desc')}}</small>
               </div>
-              <button type="submit" :disabled="errors.anyError()" @click.prevent="save" class="btn btn-primary">Save</button>
+              <button type="submit" :disabled="form.errors.anyError()" @click.prevent="save" class="btn btn-primary">Save</button>
             </form>
           </div>
         </div>
@@ -79,12 +78,26 @@ class Error {
 
 }
 
+class Form{
+  constructor(data) {
+    this.data=data;
+
+    for (let key in data) {
+      this[key]=data[key]
+    }
+     this.errors= new Error();
+  }
+}
+
 export default {
   data() {
     return {
-      title: "",
+      form:new Form({
+     title: "",
       desc: "",
-      errors: new Error()
+      }),
+    
+     
     };
   },
   methods: {
@@ -94,8 +107,8 @@ export default {
           title: this.title,
           desc: this.desc
         }).then(function(response) { 
-             this.title='';
-              this.desc='';
+             this.form.title='';
+              this.form.desc='';
                Vue.notify({
                   group: 'message',
                   type: 'warn',
@@ -104,7 +117,7 @@ export default {
               });
             
         }).catch(error => {
-            this.errors.recoredError(error.response.data.errors);
+            this.form.errors.recoredError(error.response.data.errors);
         });
     }
   }
